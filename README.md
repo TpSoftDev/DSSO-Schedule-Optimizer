@@ -1,1 +1,1 @@
-# DSSO-Shedule-Optimizer
+# DSSO-Shcedule-Optimizer
