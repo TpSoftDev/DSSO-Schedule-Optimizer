@@ -5,6 +5,8 @@ from tkinter import ttk, messagebox
 from tkinter import Toplevel, Text
 import subprocess
 import os
+
+from updateAvailability import AvailabilityUpdater
 from utils.helperFunctions import convert_to_readable_time, quicksort_shifts, getLocationNames
 from api_calls.schedule_source_api.schedule_source_api import getScheduleId, getEmptyShiftsForDay, getLocations, getScheduleNames
 from availabilityCalculator.main import filterEmptyShiftsForDay
@@ -60,42 +62,37 @@ def show_file_path(file_path):
 # Triggers the subprocess that runs gridGenerator.py
 # When clicked, program will generate a window displaying where the new grid is 
 # Also displays a window to show available empty shifts given their availability
-
-# Global Variable
-external_ID = None
+# Function to be called when the "Okay" button is pressed
 def on_ok():
-    # Print the values entered in the entry fields
-    print(f"Facility Name: {selected_facility_var.get()}")
-    print(f"Schedule Name: {selected_schedule_var.get()}")
-    print(f"External ID: {external_id.get()}")
-    external_ID = external_id.get()  # Store the External ID in a variable
+    global external_ID  # Declare global variable for external ID
+    # Get values from the entry fields
+    facility_name = selected_facility_var.get()
+    schedule_name = selected_schedule_var.get()
+    external_ID = external_id.get()  # Store the External ID in a global variable
 
-
-    try :
-        #Retrieve the schedule ID number based on the user input
-        scheduleId = getScheduleId(selected_facility_var.get().rstrip(), selected_schedule_var.get().rstrip())
+    try:
+        # Retrieve the schedule ID based on the user input
+        scheduleId = getScheduleId(facility_name.strip(), schedule_name.strip())
     except Exception as e:
         messagebox.showerror("Error", f"Failed to fetch Schedule ID: {e}")
-   
-    #Show that the program is loading/executing
+
     print("Loading Window...")
+    root.withdraw()  # Hide the main window
 
-    # Withdraw the main window
-    root.withdraw()
-
-    # Execute the backend script and get the file path
+    # Execute the backend script to generate the schedule
     file_path = execute_backend_script()
-    
-    #Open window for listing available empty shifts
+
     if scheduleId:
-        open_empty_shifts_window(0, scheduleId)
-        
+        # Open window for listing available empty shifts
+        open_empty_shifts_window(int(external_ID), scheduleId)
+
+        # Update availability
+        avail_ranges = AvailabilityUpdater.update_availability(external_ID)
     else:
-        print("Error Retrieving the Schedule ID Number")
+        print("Error retrieving the Schedule ID Number")
 
     # Show the file path in a new window
     show_file_path(file_path)
-
        
 #Opens a new window when the schedule is generated that shows the list of available shifts the employee can work
 #Displays a list of shifts sorted by earliest start time to latest and grouped by day of week

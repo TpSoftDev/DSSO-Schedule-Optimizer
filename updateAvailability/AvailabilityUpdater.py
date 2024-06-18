@@ -1,7 +1,6 @@
 ##################################################### Update Availability ##############################################
 from datetime import datetime, timedelta
 from api_calls.schedule_source_api.schedule_source_api import updateAvailability, getAllActiveEmployees
-from application import external_ID
 
 # Needed for Mac
 import certifi
@@ -111,9 +110,3 @@ def update_availability(external_ID, avail_ranges):
     updateAvailability(updated_data)
     print("UPDATED")
     print(f"External ID: {external_ID}")
-
-# Print the student ID being used
-print(f"Updating availability for student ID: {external_ID}")
-
-# Call the function to update availability
-update_availability(external_ID, avail_ranges)
