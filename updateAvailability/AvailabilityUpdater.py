@@ -98,18 +98,16 @@ for day, ranges in condensed_available_times_per_day.items():
     avail_ranges.append(formatted_ranges)
 
 def update_availability(external_ID, avail_ranges):
-    """Update availability for a student based on available ranges."""
     updated_data = []
     for i in range(1, 8):
         updated_data.append({
-
             "DayId": i,
             "AvailableRanges": avail_ranges[i-1],
             "StudentId": external_ID,
             "Enabled": 1,
             "Rank": 1
         })
-
+    print(f"Updating availability with data: {updated_data}")
     updateAvailability(updated_data)
     print("UPDATED")
     print(f"External ID: {external_ID}")
