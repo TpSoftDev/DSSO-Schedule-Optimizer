@@ -60,12 +60,17 @@ def show_file_path(file_path):
 # Triggers the subprocess that runs gridGenerator.py
 # When clicked, program will generate a window displaying where the new grid is 
 # Also displays a window to show available empty shifts given their availability
+
+# Global Variable
+external_ID = None
 def on_ok():
     # Print the values entered in the entry fields
     print(f"Facility Name: {selected_facility_var.get()}")
     print(f"Schedule Name: {selected_schedule_var.get()}")
     print(f"External ID: {external_id.get()}")
-    
+    external_ID = external_id.get()  # Store the External ID in a variable
+
+
     try :
         #Retrieve the schedule ID number based on the user input
         scheduleId = getScheduleId(selected_facility_var.get().rstrip(), selected_schedule_var.get().rstrip())
