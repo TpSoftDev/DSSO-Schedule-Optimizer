@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from api_calls.schedule_source_api.schedule_source_api import updateAvailability, getAllActiveEmployees
 from application import external_ID
 
+
 # Needed for Mac
 import certifi
 import ssl
@@ -97,20 +98,21 @@ for day, ranges in condensed_available_times_per_day.items():
     print(f"{day}: {formatted_ranges}")
     avail_ranges.append(formatted_ranges)
 
-def update_availability(external_ID, avail_ranges):
+def update_availability(student_id, avail_ranges):
+    """Update availability for a student based on available ranges."""
     updated_data = []
     for i in range(1, 8):
         updated_data.append({
             "DayId": i,
             "AvailableRanges": avail_ranges[i-1],
-            "StudentId": external_ID,
+            "StudentId": student_id,
             "Enabled": 1,
             "Rank": 1
         })
-    print(f"Updating availability with data: {updated_data}")
+
     updateAvailability(updated_data)
     print("UPDATED")
-    print(f"External ID: {external_ID}")
+    print(f"Student ID: {student_id}")
 
 # Print the student ID being used
 print(f"Updating availability for student ID: {external_ID}")
