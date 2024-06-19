@@ -10,10 +10,10 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 # Define the employee class schedule data
 employee_classSchedule = [
-    {"subject": "Physics", "start": "08:00:00 AM", "end": "11:00:00 PM", "meetingDays": "U"},
-    {"subject": "Math", "start": "08:00:00 AM", "end": "3:15:00 PM", "meetingDays": "M"},
-    {"subject": "Hello", "start": "08:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
-    {"subject": "Science", "start": "08:00:00 AM", "end": "07:25:00 AM", "meetingDays": "W"}
+    {"subject": "Physics", "start": "09:00:00 AM", "end": "11:00:00 PM", "meetingDays": "U"},
+    {"subject": "Math", "start": "05:00:00 AM", "end": "3:15:00 PM", "meetingDays": "M"},
+    {"subject": "Hello", "start": "10:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
+    {"subject": "Science", "start": "11:00:00 AM", "end": "07:25:00 AM", "meetingDays": "W"}
 ]
 
 def generate_available_times_per_day():

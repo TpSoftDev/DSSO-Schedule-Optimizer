@@ -12,7 +12,6 @@ from availabilityCalculator.main import filterEmptyShiftsForDay
 
 # Needed for Mac
 import ssl
-
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
