@@ -6,12 +6,15 @@ from tkinter import Toplevel, Text
 import subprocess
 import os
 from utils.helperFunctions import convert_to_readable_time, quicksort_shifts, getLocationNames
-from api_calls.schedule_source_api.schedule_source_api import getScheduleId, getEmptyShiftsForDay, getLocations, getScheduleNames
+from api_calls.schedule_source_api.schedule_source_api import getScheduleId, getEmptyShiftsForDay, getLocations, \
+    getScheduleNames
 from availabilityCalculator.main import filterEmptyShiftsForDay
 
 # Needed for Mac
 import ssl
+
 ssl._create_default_https_context = ssl._create_unverified_context
+
 
 ########################################### execute_backend_script #####################################################
 # Function to execute the backend script and return the path to the generated timetable
@@ -29,9 +32,8 @@ def execute_backend_script():
     subprocess.run([python_executable, os.path.join(current_pyDirectory, "gridGenerator/gridGenerator.py")])
 
     print(f"{current_dir}")
-    print(f"{current_pyDirectory }")
+    print(f"{current_pyDirectory}")
     print(f"{python_executable}")
-
 
     # Return the path to the generated timetable file in the current working directory
     return os.path.join(current_dir, "Timetable.xlsx")
@@ -66,13 +68,13 @@ def on_ok():
     print(f"Schedule Name: {selected_schedule_var.get()}")
     print(f"External ID: {external_id.get()}")
 
-    try :
-        #Retrieve the schedule ID number based on the user input
+    try:
+        # Retrieve the schedule ID number based on the user input
         scheduleId = getScheduleId(selected_facility_var.get().rstrip(), selected_schedule_var.get().rstrip())
     except Exception as e:
         messagebox.showerror("Error", f"Failed to fetch Schedule ID: {e}")
 
-    #Show that the program is loading/executing
+    # Show that the program is loading/executing
     print("Loading Window...")
 
     # Withdraw the main window
@@ -81,7 +83,7 @@ def on_ok():
     # Execute the backend script and get the file path
     file_path = execute_backend_script()
 
-    #Open window for listing available empty shifts
+    # Open window for listing available empty shifts
     if scheduleId:
         open_empty_shifts_window(0, scheduleId)
 
@@ -91,29 +93,28 @@ def on_ok():
     # Show the file path in a new window
     show_file_path(file_path)
 
-       
-#Opens a new window when the schedule is generated that shows the list of available shifts the employee can work
-#Displays a list of shifts sorted by earliest start time to latest and grouped by day of week
+
+# Opens a new window when the schedule is generated that shows the list of available shifts the employee can work
+# Displays a list of shifts sorted by earliest start time to latest and grouped by day of week
 def open_empty_shifts_window(studentId, scheduleId):
     new_window = Toplevel(root)
-    
+
     new_window.title("Availble Shifts")
     new_window.geometry("600x400")
     label = tk.Label(new_window, text="Shifts Available To Work")
     label.pack(pady=20)
-    
+
     text_widget = Text(new_window)
     text_widget.pack(expand=True, fill='both')
-    
+
     def printAllEmptyShifts(studentId, scheduleId):
         text_widget.insert(tk.END, " Day\t\t  Start\t\t  End\t\t  Station\n\n")
         for dayId in range(1, 8):
             printEmptyShiftsForDay(studentId, scheduleId, dayId)
             text_widget.insert(tk.END, "\n")
-            
-            
+
     def printEmptyShiftsForDay(studentId, scheduleId, dayId):
-        dayString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayId-1]
+        dayString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayId - 1]
         emptyShifts = getEmptyShiftsForDay(scheduleId, dayId)
         emptyShifts = filterEmptyShiftsForDay(studentId, emptyShifts)
         emptyShifts = quicksort_shifts(emptyShifts)
@@ -122,25 +123,25 @@ def open_empty_shifts_window(studentId, scheduleId):
             readableStart = convert_to_readable_time(shift["ShiftStart"])
             readableEnd = convert_to_readable_time(shift["ShiftEnd"])
             text_widget.insert(tk.END,
-                f"{dayString}\t\t{readableStart}\t\t{readableEnd}\t\t{shift['StationName']}\n"
-            )
-            
+                               f"{dayString}\t\t{readableStart}\t\t{readableEnd}\t\t{shift['StationName']}\n"
+                               )
+
     printAllEmptyShifts(studentId, scheduleId)
 
     # Add a button to close the new window
     close_button = tk.Button(new_window, text="Close", command=new_window.destroy)
     close_button.pack(pady=10)
 
-   
-#Triggers a function that retrieves the list of schedules when an option is changed
-#Used to allow us to pass in the location's name as a parameter to the actual function
+
+# Triggers a function that retrieves the list of schedules when an option is changed
+# Used to allow us to pass in the location's name as a parameter to the actual function
 def select_location(event):
     selected_facility = selected_facility_var.get()
     on_location_change(selected_facility)
 
 
-#Search function that will display the list of schedules for the location selected in the first input
-#Re-initializes dropdown menus to display schedules specific to the selected location
+# Search function that will display the list of schedules for the location selected in the first input
+# Re-initializes dropdown menus to display schedules specific to the selected location
 def on_location_change(newLocation):
     global schedule_name_list  # Declare that we are using the global variable
     schedule_name_list = getScheduleNames(newLocation)
@@ -148,15 +149,15 @@ def on_location_change(newLocation):
     print("Location Changed to " + newLocation)
 
 
-#Set the dropdown menu input fields and their respective values
-#Called each time the location is changed in the first dropdown to re-update the schedules
+# Set the dropdown menu input fields and their respective values
+# Called each time the location is changed in the first dropdown to re-update the schedules
 def initDropdowns():
     # Label and Entry widget for Facility Name
     ttk.Label(root, text="Facility Name:").grid(column=0, row=0, padx=10, pady=5, sticky=tk.W)
     facility_name = ttk.Combobox(root, textvariable=selected_facility_var, values=sorted(location_name_list), width=30)
     facility_name.bind('<<ComboboxSelected>>', select_location)
     facility_name.grid(column=1, row=0, padx=10, pady=5)
-    
+
     # Label and Entry widget for Schedule Name
     ttk.Label(root, text="Schedule Name:").grid(column=0, row=1, padx=10, pady=5, sticky=tk.W)
     schedule_name = ttk.Combobox(root, textvariable=selected_schedule_var, values=schedule_name_list, width=30)
@@ -168,19 +169,18 @@ root = tk.Tk()
 root.title("Class Schedule Generator")
 root.geometry("440x160")
 
-#Create lists of locations for the first dropdown menu
+# Create lists of locations for the first dropdown menu
 location_list = getLocations()
 location_name_list = getLocationNames(location_list)
 
-#Keeps track of the location and schedule selected from the dropdown menu
+# Keeps track of the location and schedule selected from the dropdown menu
 selected_facility_var = tk.StringVar(root)
 selected_schedule_var = tk.StringVar(root)
 
-#Set the initital dropdown value
+# Set the initital dropdown value
 selected_facility_var.set("Select a location")
 
-
-#Declare variables that will get initialized in initDropdowns()
+# Declare variables that will get initialized in initDropdowns()
 schedule_name_list = []
 
 initDropdowns()
