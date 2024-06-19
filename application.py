@@ -63,6 +63,7 @@ def show_file_path(file_path):
 # When clicked, program will generate a window displaying where the new grid is 
 # Also displays a window to show available empty shifts given their availability
 def on_ok():
+
     # Print the values entered in the entry fields
     print(f"Facility Name: {selected_facility_var.get()}")
     print(f"Schedule Name: {selected_schedule_var.get()}")

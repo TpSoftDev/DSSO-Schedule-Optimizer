@@ -251,6 +251,8 @@ def updateAvailability(newAvailability):
     res = conn.getresponse()
     data = res.read()
     print(data)
+    print(payload)
+    print(payload_json)
     
     
 #API Call to retrieve all employees with no termination date (i.e active employees)

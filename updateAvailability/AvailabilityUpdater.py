@@ -7,12 +7,13 @@ import certifi
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+
 # Define the employee class schedule data
 employee_classSchedule = [
-    {"subject": "Physics", "start": "08:00:00 AM", "end": "11:00:00 PM", "meetingDays": "UM"},
-    {"subject": "Math", "start": "08:00:00 AM", "end": "3:15:00 PM", "meetingDays": "UR"},
-    {"subject": "Hello", "start": "08:00:00 AM", "end": "9:45:00 PM", "meetingDays": "FA"},
-    {"subject": "Science", "start": "08:00:00 AM", "end": "07:25:00 AM", "meetingDays": "T"}
+    {"subject": "Physics", "start": "08:00:00 AM", "end": "11:00:00 PM", "meetingDays": "U"},
+    {"subject": "Math", "start": "08:00:00 AM", "end": "3:15:00 PM", "meetingDays": "M"},
+    {"subject": "Hello", "start": "08:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
+    {"subject": "Science", "start": "08:00:00 AM", "end": "07:25:00 AM", "meetingDays": "W"}
 ]
 
 def generate_available_times_per_day():
@@ -96,6 +97,7 @@ for day, ranges in condensed_available_times_per_day.items():
     print(f"{day}: {formatted_ranges}")
     avail_ranges.append(formatted_ranges)
 
+
 def update_availability(student_id, avail_ranges):
     """Update availability for a student based on available ranges."""
     updated_data = []
@@ -111,3 +113,6 @@ def update_availability(student_id, avail_ranges):
     updateAvailability(updated_data)
     print("UPDATED")
     print(f"Student ID: {student_id}")
+
+
+update_availability(170601496, avail_ranges)
