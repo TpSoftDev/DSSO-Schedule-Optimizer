@@ -2,8 +2,6 @@
 from datetime import datetime, timedelta
 from api_calls.schedule_source_api.schedule_source_api import updateAvailability, getAllActiveEmployees
 
-
-
 # Needed for Mac
 import certifi
 import ssl
