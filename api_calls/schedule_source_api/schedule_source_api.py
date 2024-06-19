@@ -250,11 +250,10 @@ def updateAvailability(newAvailability):
     conn.request("PUT", url, payload_json, headers)
     res = conn.getresponse()
     data = res.read()
-    print(data)
-    print(payload)
-    print(payload_json)
-    
-    
+    # print(data)
+    # print(payload)
+    # print(payload_json)
+
 #API Call to retrieve all employees with no termination date (i.e active employees)
 #No parameter
 #Returns the list of student Id numbers of all active employees
@@ -290,4 +289,3 @@ def getAllActiveEmployees():
     data = parse_tsv(data)
     print(data)
     return data
-

@@ -105,7 +105,7 @@ def update_availability(student_id, avail_ranges):
         updated_data.append({
             "DayId": i,
             "AvailableRanges": avail_ranges[i-1],
-            "StudentId": student_id,
+            "EmployeeExternalId": student_id,
             "Enabled": 1,
             "Rank": 1
         })
@@ -113,6 +113,7 @@ def update_availability(student_id, avail_ranges):
     updateAvailability(updated_data)
     print("UPDATED")
     print(f"Student ID: {student_id}")
+    print(updated_data)
 
 
 update_availability(170601496, avail_ranges)
