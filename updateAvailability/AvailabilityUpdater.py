@@ -1,6 +1,7 @@
 ##################################################### Update Availability ##############################################
-from datetime import datetime, timedelta
-from api_calls.schedule_source_api.schedule_source_api import updateAvailability, getAllActiveEmployees
+from datetime import datetime
+from api_calls.workday_api.workday_api import getStudentSchedule
+from api_calls.schedule_source_api.schedule_source_api import updateAvailability
 
 # Needed for Mac
 import certifi
@@ -8,6 +9,7 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
+student_id = 170601496
 # Define the employee class schedule data
 employee_classSchedule = [
     {"subject": "Physics", "start": "09:00:00 AM", "end": "11:00:00 PM", "meetingDays": "U"},
@@ -15,6 +17,10 @@ employee_classSchedule = [
     {"subject": "Hello", "start": "10:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
     {"subject": "Science", "start": "11:00:00 AM", "end": "07:25:00 AM", "meetingDays": "W"}
 ]
+
+# Define the employee class schedule data
+#employee_classSchedule = getStudentSchedule(student_id)
+
 
 def generate_available_times_per_day():
     """Generate a dictionary with available times for each day of the week."""
@@ -116,4 +122,4 @@ def update_availability(student_id, avail_ranges):
     print(updated_data)
 
 
-update_availability(170601496, avail_ranges)
+update_availability(student_id, avail_ranges)

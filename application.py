@@ -5,6 +5,8 @@ from tkinter import ttk, messagebox
 from tkinter import Toplevel, Text
 import subprocess
 import os
+
+from updateAvailability.AvailabilityUpdater import update_availability, avail_ranges
 from utils.helperFunctions import convert_to_readable_time, quicksort_shifts, getLocationNames
 from api_calls.schedule_source_api.schedule_source_api import getScheduleId, getEmptyShiftsForDay, getLocations, \
     getScheduleNames
@@ -62,7 +64,6 @@ def show_file_path(file_path):
 # When clicked, program will generate a window displaying where the new grid is 
 # Also displays a window to show available empty shifts given their availability
 def on_ok():
-
     # Print the values entered in the entry fields
     print(f"Facility Name: {selected_facility_var.get()}")
     print(f"Schedule Name: {selected_schedule_var.get()}")
@@ -80,13 +81,19 @@ def on_ok():
     # Withdraw the main window
     root.withdraw()
 
+    # Use the student ID entered by the user
+    student_id = external_id.get()
+
     # Execute the backend script and get the file path
     file_path = execute_backend_script()
 
     # Open window for listing available empty shifts
     if scheduleId:
-        open_empty_shifts_window(0, scheduleId)
+        open_empty_shifts_window(student_id, scheduleId)
 
+        # Call update_availability method
+        update_availability(student_id, avail_ranges)
+        print("Availability Updated")
     else:
         print("Error Retrieving the Schedule ID Number")
 
