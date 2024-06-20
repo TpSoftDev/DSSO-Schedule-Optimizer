@@ -10,6 +10,16 @@ from api_calls.workday_api.workday_api import getStudentSchedule
 from api_calls.schedule_source_api.schedule_source_api import getEmptyShiftsForDay
 from utils.helperFunctions import convert_to_time, convert_to_readable_time, quicksort_shifts
 
+employee_classSchedule = [
+    {"subject": "Physics", "start": "09:00:00 AM", "end": "2:00:00 PM", "meetingDays": "U"},
+    {"subject": "Math", "start": "10:00:00 AM", "end": "5:15:00 PM", "meetingDays": "M"},
+    {"subject": "English", "start": "11:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
+    {"subject": "Chem 167", "start": "07:00:00 AM", "end": "1:45:00 PM", "meetingDays": "W"},
+    {"subject": "Coms 230", "start": "08:00:00 AM", "end": "9:45:00 PM", "meetingDays": "R"},
+    {"subject": "CprE 281", "start": "06:00:00 AM", "end": "9:45:00 AM", "meetingDays": "F"},
+    {"subject": "Coms 309", "start": "05:00:00 AM", "end": "10:25:00 AM", "meetingDays": "A"}
+]
+
 
 
 #Determines what shifts are to be removed from the list of empty shifts and generates new list with those shifts removed

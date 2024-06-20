@@ -170,7 +170,6 @@ def initDropdowns():
     schedule_name = ttk.Combobox(root, textvariable=selected_schedule_var, values=schedule_name_list, width=30)
     schedule_name.grid(column=1, row=1, padx=10, pady=5)
 
-
 # Create the main window
 root = tk.Tk()
 root.title("Class Schedule Generator")

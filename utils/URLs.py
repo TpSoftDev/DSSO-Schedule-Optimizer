@@ -7,7 +7,7 @@ class URLs(Enum):
 
     GET_CLASS_SCHEDULE_TEST_FIRST = "https://73e3a015-c6d6-4d11-b52d-7bf2de6f3541.mock.pstmn.io/Classes/First"
 
-    GET_CLASS_SCHEDULE_TEST_SECOND = "https://73e3a015-c6d6-4d11-b52d-7bf2de6f3541.mock.pstmn.io/Classes/Second"
+    GET_CLASS_SCHEDULE_TEST_SECOND = "https://d6c44a80-fe54-4811-9c63-498d87c948a5.mock.pstmn.io/Classes"
 
     GET_CLASS_SCHEDULE_TEST_THIRD = "https://73e3a015-c6d6-4d11-b52d-7bf2de6f3541.mock.pstmn.io/Classes/Third"
 
