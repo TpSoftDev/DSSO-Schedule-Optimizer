@@ -16,17 +16,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 student_id = 170601496
 # Define the employee class schedule data
-# employee_classSchedule = [
-#     {"subject": "Physics", "start": "09:00:00 AM", "end": "2:00:00 PM", "meetingDays": "U"},
-#     {"subject": "Math", "start": "10:00:00 AM", "end": "5:15:00 PM", "meetingDays": "M"},
-#     {"subject": "English", "start": "11:00:00 AM", "end": "9:45:00 PM", "meetingDays": "T"},
-#     {"subject": "Chem 167", "start": "07:00:00 AM", "end": "1:45:00 PM", "meetingDays": "W"},
-#     {"subject": "Coms 230", "start": "08:00:00 AM", "end": "9:45:00 PM", "meetingDays": "R"},
-#     {"subject": "CprE 281", "start": "06:00:00 AM", "end": "9:45:00 AM", "meetingDays": "F"},
-#     {"subject": "Coms 309", "start": "05:00:00 AM", "end": "10:25:00 AM", "meetingDays": "A"}
-# ]
-
-# Define the employee class schedule data
 employee_classSchedule = getStudentSchedule(student_id)
 
 
