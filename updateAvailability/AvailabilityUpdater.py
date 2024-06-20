@@ -16,7 +16,34 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 student_id = 170601496
 # Define the employee class schedule data
-employee_classSchedule = getStudentSchedule(student_id)
+#employee_classSchedule = getStudentSchedule(student_id)
+
+employee_classSchedule = [
+    {
+        "subject": "Physics",
+        "start": "12:00:00 PM",
+        "end": "1:00:00 PM",
+        "meetingDays": "TR"
+    },
+    {
+        "subject": "Math",
+        "start": "10:00:00 AM",
+        "end": "11:00:00 AM",
+        "meetingDays": "MWF"
+    },
+    {
+        "subject": "Hello",
+        "start": "11:30:00 AM",
+        "end": "12:45:00 PM",
+        "meetingDays": "MWF"
+    },
+    {
+        "subject": "Science",
+        "start": "10:00:00 AM",
+        "end": "11:00:00 AM",
+        "meetingDays": "U"
+    }
+]
 
 
 def generate_available_times_per_day():
