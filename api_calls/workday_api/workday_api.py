@@ -18,11 +18,12 @@ from utils.URLs import URLs
 #Returns a list of class sections the student is enrolled in for the semester
 # This api call is to a mock url generated from post man. Once we get clearance to workdays servers, this will be changed
 def getStudentSchedule(student_id):
-    url = URLs.GET_CLASS_SCHEDULE_TEST_SECOND.value
+    url = URLs.GET_CLASS_SCHEDULE_TEST.value
     response = requests.get(url)
     
     if response.status_code == 200:
         try:
+            print()
             return response.json()
         except requests.exceptions.JSONDecodeError as e:
             # Handle JSON decode error

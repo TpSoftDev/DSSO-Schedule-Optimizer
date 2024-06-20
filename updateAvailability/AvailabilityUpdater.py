@@ -1,4 +1,9 @@
 ##################################################### Update Availability ##############################################
+import os, sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+external_directory = os.path.join(current_dir, "..")
+sys.path.append(external_directory)
+
 from datetime import datetime
 from api_calls.workday_api.workday_api import getStudentSchedule
 from api_calls.schedule_source_api.schedule_source_api import updateAvailability
