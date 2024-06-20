@@ -100,7 +100,6 @@ for day, ranges in condensed_available_times_per_day.items():
     print(f"{day}: {formatted_ranges}")
     avail_ranges.append(formatted_ranges)
 
-
 def update_availability(student_id, avail_ranges):
     """Update availability for a student based on available ranges."""
     updated_data = []
@@ -117,6 +116,3 @@ def update_availability(student_id, avail_ranges):
     print("UPDATED")
     print(f"Student ID: {student_id}")
     print(updated_data)
-
-
-update_availability(student_id, avail_ranges)
