@@ -99,7 +99,9 @@ def main():
     # Construct the path to the Excel file using os.path.join
     # This dynamically constructs the file path based on the current directory of the script
     excel_file_path = os.path.join(current_dir, "Timetable.xlsx")
-    print(f"Excel file path: {excel_file_path}")
+    if not os.path.exists(excel_file_path):
+        print(f"Error: The file Timetable.xlsx does not exist at {excel_file_path}")
+        sys.exit(1)
     
     # Load the workbook using the constructed path
     # This replaces the hard-coded path with a dynamically constructed one
