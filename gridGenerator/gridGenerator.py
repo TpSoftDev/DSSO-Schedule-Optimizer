@@ -76,9 +76,9 @@ def isAvailable(course, day, currentTime):
     return True
 
 
-#Restores an empty grid so that each time this program runs, the grid will be overwritten
-#Iterates through each cell and fills it with the empty white color
-#No return value or parameters needed
+# Restores an empty grid so that each time this program runs, the grid will be overwritten
+# Iterates through each cell and fills it with the empty white color
+# No return value or parameters needed
 def clearGrid(ws):
     min_row = 3
     min_col = 2
@@ -88,10 +88,13 @@ def clearGrid(ws):
     for row in range(min_row, max_row + 1):
         for col in range(min_col, ws.max_column + 1):
             cell = ws.cell(row=row, column=col)
-            fillColor = PatternFill(
-                start_color="FFFFFF", end_color="FFFFFF", fill_type="solid"
-            )
-            cell.fill = fillColor
+
+            # Check if the cell is filled with the highlight color
+            if cell.fill.start_color.index == "98FF98":
+                fillColor = PatternFill(
+                    start_color="FFFFFF", end_color="FFFFFF", fill_type="solid"
+                )
+                cell.fill = fillColor
 
 
 #Run the program that updates and saves the TimeTable worksheet
