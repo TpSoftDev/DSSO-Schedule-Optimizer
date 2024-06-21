@@ -14,7 +14,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 external_directory = os.path.join(current_dir, "..")
 sys.path.append(external_directory)
 
-from api_calls.workday_api.workday_api import getStudentSchedule
+from api_calls.workday_api.workday_api import getStudentSchedule, getHardCodedSchedule
 from utils.helperFunctions import convert_to_time
 
 
@@ -118,7 +118,7 @@ def main():
     
     #Get the student schedule used to populate the grid
     #TODO: change this parameter once workday api can be accessed
-    data1 = getStudentSchedule(0)
+    data1 = getHardCodedSchedule()
 
 
     if data1:

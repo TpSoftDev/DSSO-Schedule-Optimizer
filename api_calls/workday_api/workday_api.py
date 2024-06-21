@@ -34,8 +34,15 @@ def getStudentSchedule(student_id):
         # Handle non-200 status codes
         print("Error:", response.status_code, response.reason)
         return None
-    
-    
-    
-    
-    
+
+
+def getHardCodedSchedule():
+    return [
+                {
+                    "subject": "Physics",
+                    "start": "3:00:00 PM",
+                    "end": "5:00:00 PM",
+                    "meetingDays": "TR"
+                }
+
+    ]
