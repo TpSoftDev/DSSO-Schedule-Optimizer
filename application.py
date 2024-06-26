@@ -1,4 +1,3 @@
-########################################### This File is for the Python UI #############################################
 import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -12,36 +11,17 @@ from api_calls.schedule_source_api.schedule_source_api import getScheduleId, get
     getScheduleNames
 from availabilityCalculator.main import filterEmptyShiftsForDay
 
-# Needed for Mac
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+# Define the path to the Excel file
+excel_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Timetable.xlsx")
 
-########################################### execute_backend_script #####################################################
-# Function to execute the backend script and return the path to the generated timetable
-def execute_backend_script():
-    # Get the current working directory
-    current_dir = os.getcwd()
+def execute_backend_script(excel_file_path):
+    # Run the backend script with the excel file path as an argument
+    subprocess.run(
+        [sys.executable, os.path.join(os.path.dirname(__file__), "gridGenerator", "gridGenerator.py"), excel_file_path])
 
-    # Get the directory of the currently running Python script
-    current_pyDirectory = os.path.dirname(os.path.abspath(__file__))
-
-    # Get the path to the Python interpreter
-    python_executable = sys.executable
-
-    # Run the backend script
-    subprocess.run([python_executable, os.path.join(current_pyDirectory, "gridGenerator/gridGenerator.py")])
-
-    print(f"{current_dir}")
-    print(f"{current_pyDirectory}")
-    print(f"{python_executable}")
-
-    # Return the path to the generated timetable file in the current working directory
-    return os.path.join(current_dir, "Timetable.xlsx")
-
-
-#########################################  show_file_path Window  #######################################################
-# Function to create a new window displaying the file path
 def show_file_path(file_path):
     # Create a new top-level window
     new_window = tk.Toplevel(root)
@@ -58,11 +38,6 @@ def show_file_path(file_path):
     # Button to close the new window and terminate the program
     ttk.Button(new_window, text="OK", command=root.quit).pack(pady=10)
 
-
-# Function to be called when the OK button is pressed
-# Triggers the subprocess that runs gridGenerator.py
-# When clicked, program will generate a window displaying where the new grid is 
-# Also displays a window to show available empty shifts given their availability
 def on_ok():
     # Print the values entered in the entry fields
     print(f"Facility Name: {selected_facility_var.get()}")
@@ -85,7 +60,7 @@ def on_ok():
     student_id = external_id.get()
 
     # Execute the backend script and get the file path
-    file_path = execute_backend_script()
+    execute_backend_script(excel_file_path)
 
     # Open window for listing available empty shifts
     if scheduleId:
@@ -98,15 +73,11 @@ def on_ok():
         print("Error Retrieving the Schedule ID Number")
 
     # Show the file path in a new window
-    show_file_path(file_path)
+    show_file_path(excel_file_path)
 
-
-# Opens a new window when the schedule is generated that shows the list of available shifts the employee can work
-# Displays a list of shifts sorted by earliest start time to latest and grouped by day of week
 def open_empty_shifts_window(studentId, scheduleId):
     new_window = Toplevel(root)
-
-    new_window.title("Availble Shifts")
+    new_window.title("Available Shifts")
     new_window.geometry("600x400")
     label = tk.Label(new_window, text="Shifts Available To Work")
     label.pack(pady=20)
@@ -139,33 +110,22 @@ def open_empty_shifts_window(studentId, scheduleId):
     close_button = tk.Button(new_window, text="Close", command=new_window.destroy)
     close_button.pack(pady=10)
 
-
-# Triggers a function that retrieves the list of schedules when an option is changed
-# Used to allow us to pass in the location's name as a parameter to the actual function
 def select_location(event):
     selected_facility = selected_facility_var.get()
     on_location_change(selected_facility)
 
-
-# Search function that will display the list of schedules for the location selected in the first input
-# Re-initializes dropdown menus to display schedules specific to the selected location
 def on_location_change(newLocation):
-    global schedule_name_list  # Declare that we are using the global variable
+    global schedule_name_list
     schedule_name_list = getScheduleNames(newLocation)
     initDropdowns()
     print("Location Changed to " + newLocation)
 
-
-# Set the dropdown menu input fields and their respective values
-# Called each time the location is changed in the first dropdown to re-update the schedules
 def initDropdowns():
-    # Label and Entry widget for Facility Name
     ttk.Label(root, text="Facility Name:").grid(column=0, row=0, padx=10, pady=5, sticky=tk.W)
     facility_name = ttk.Combobox(root, textvariable=selected_facility_var, values=sorted(location_name_list), width=30)
     facility_name.bind('<<ComboboxSelected>>', select_location)
     facility_name.grid(column=1, row=0, padx=10, pady=5)
 
-    # Label and Entry widget for Schedule Name
     ttk.Label(root, text="Schedule Name:").grid(column=0, row=1, padx=10, pady=5, sticky=tk.W)
     schedule_name = ttk.Combobox(root, textvariable=selected_schedule_var, values=schedule_name_list, width=30)
     schedule_name.grid(column=1, row=1, padx=10, pady=5)
@@ -175,34 +135,26 @@ root = tk.Tk()
 root.title("Class Schedule Generator")
 root.geometry("440x160")
 
-# Create lists of locations for the first dropdown menu
 location_list = getLocations()
 location_name_list = getLocationNames(location_list)
 
-# Keeps track of the location and schedule selected from the dropdown menu
 selected_facility_var = tk.StringVar(root)
 selected_schedule_var = tk.StringVar(root)
 
-# Set the initital dropdown value
 selected_facility_var.set("Select a location")
 
-# Declare variables that will get initialized in initDropdowns()
 schedule_name_list = []
 
 initDropdowns()
 
-# Label and Entry widget for External ID
 ttk.Label(root, text="External ID:").grid(column=0, row=2, padx=10, pady=5, sticky=tk.W)
 external_id = ttk.Entry(root, width=30)
 external_id.grid(column=1, row=2, padx=10, pady=5)
 
-# Button to generate the schedule
 generate_button = ttk.Button(root, text="Generate Schedule", command=on_ok)
 generate_button.grid(column=0, row=3, columnspan=2, pady=10)
 
-# Add padding around the entire grid
 for child in root.winfo_children():
     child.grid_configure(padx=10, pady=5)
 
-# Run the application
 root.mainloop()
