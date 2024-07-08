@@ -13,6 +13,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 external_directory = os.path.join(current_dir, "..")
 sys.path.append(external_directory)
 
+# Import functions from custom modules
 from api_calls.workday_api.workday_api import getStudentSchedule
 from utils.helperFunctions import convert_to_time
 
@@ -33,34 +34,40 @@ if not os.path.exists(excel_file_path):
 wb = load_workbook(excel_file_path)
 ws = wb.active
 
-# Iterate through each day to fill in the grid
 def populateGrid(data):
+    """
+    Iterate through each day to fill in the grid based on the provided data.
+    """
     for course in data:
-        fillInDay(course, "U", 3)
-        fillInDay(course, "M", 4)
-        fillInDay(course, "T", 5)
-        fillInDay(course, "W", 6)
-        fillInDay(course, "R", 7)
-        fillInDay(course, "F", 8)
-        fillInDay(course, "S", 9)
+        fillInDay(course, "U", 3)  # Sunday
+        fillInDay(course, "M", 4)  # Monday
+        fillInDay(course, "T", 5)  # Tuesday
+        fillInDay(course, "W", 6)  # Wednesday
+        fillInDay(course, "R", 7)  # Thursday
+        fillInDay(course, "F", 8)  # Friday
+        fillInDay(course, "S", 9)  # Saturday
 
-# Iterates through each time slot in the "day" row of the grid and determines whether or not to highlight that slot
 def fillInDay(course, day, rowNum):
+    """
+    Iterates through each time slot in the "day" row of the grid and determines whether or not to highlight that slot.
+    """
     max_col = ws.max_column
-    hour = 6
-    for col_num_outer in range(2, max_col + 1, 12):  # hour loop:
+    hour = 6  # Start at 6 AM
+    for col_num_outer in range(2, max_col + 1, 12):  # Loop through each hour
         minute = 0
-        for col_num_inner in range(col_num_outer, col_num_outer + 12):
+        for col_num_inner in range(col_num_outer, col_num_outer + 12):  # Loop through each 5-minute increment
             currentTime = time(hour, minute)
             if not isAvailable(course, day, currentTime):
                 cell = ws.cell(row=rowNum, column=col_num_inner)
-                fillColor = PatternFill(start_color="98FF98", end_color="98FF98", fill_type="solid")
+                fillColor = PatternFill(start_color="98FF98", end_color="98FF98", fill_type="solid")  # Light green color
                 cell.fill = fillColor
             minute += 5
         hour += 1
 
-# Observes one time slot on the Excel sheet and determines whether or not the course meets during that time
 def isAvailable(course, day, currentTime):
+    """
+    Observes one time slot on the Excel sheet and determines whether or not the course meets during that time.
+    """
     days = course["meetingDays"]
     startClass = convert_to_time(course["start"])
     endClass = convert_to_time(course["end"])
@@ -70,23 +77,14 @@ def isAvailable(course, day, currentTime):
                 return False
     return True
 
-# Clears the grid
-def clearGrid():
-    min_row = 3
-    min_col = 2
-    max_row = 9
-    for row in range(min_row, max_row + 1):
-        for col in range(min_col, ws.max_column + 1):
-            cell = ws.cell(row=row, column=col)
-            fillColor = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
-            cell.fill = fillColor
+# Comment out or remove the clearGrid function call
+# clearGrid()
 
-# Testing the functions
-clearGrid()
+# Fetch the student schedule data from Workday
 data1 = getStudentSchedule(0)
 
 if data1:
-    populateGrid(data1)
+    populateGrid(data1)  # Populate the grid with the fetched data
 else:
     print("Error fetching data from Workday")
 
