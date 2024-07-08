@@ -33,6 +33,7 @@ if not os.path.exists(excel_file_path):
 # Load the workbook and access the active sheet
 wb = load_workbook(excel_file_path)
 ws = wb.active
+    
 
 def populateGrid(data):
     """
@@ -47,22 +48,37 @@ def populateGrid(data):
         fillInDay(course, "F", 8)  # Friday
         fillInDay(course, "S", 9)  # Saturday
 
+
 def fillInDay(course, day, rowNum):
     """
     Iterates through each time slot in the "day" row of the grid and determines whether or not to highlight that slot.
     """
+    
+    default_color = ws.cell(row=rowNum, column=1).fill.start_color
+    
     max_col = ws.max_column
     hour = 6  # Start at 6 AM
     for col_num_outer in range(2, max_col + 1, 12):  # Loop through each hour
         minute = 0
-        for col_num_inner in range(col_num_outer, col_num_outer + 12):  # Loop through each 5-minute increment
+        for col_num_inner in range(
+            col_num_outer, col_num_outer + 12
+        ):  # Loop through each 5-minute increment
             currentTime = time(hour, minute)
             if not isAvailable(course, day, currentTime):
                 cell = ws.cell(row=rowNum, column=col_num_inner)
-                fillColor = PatternFill(start_color="98FF98", end_color="98FF98", fill_type="solid")  # Light green color
+                fillColor = PatternFill(
+                    start_color="98FF98", end_color="98FF98", fill_type="solid"
+                )  # Light green color
                 cell.fill = fillColor
+            else:
+                cell = ws.cell(row=rowNum, column=col_num_inner)
+                cell.fill = PatternFill(
+                    start_color=default_color, end_color=default_color, fill_type="solid"
+                )
+                
             minute += 5
         hour += 1
+        
 
 def isAvailable(course, day, currentTime):
     """
@@ -77,11 +93,21 @@ def isAvailable(course, day, currentTime):
                 return False
     return True
 
+
 # Comment out or remove the clearGrid function call
 # clearGrid()
 
 # Fetch the student schedule data from Workday
-data1 = getStudentSchedule(0)
+# data1 = getStudentSchedule(0)
+
+data1 = [
+    {
+        "subject": "Physics",
+        "start": "12:00:00 PM",
+        "end": "1:00:00 PM",
+        "meetingDays": "TR",
+    }
+]
 
 if data1:
     populateGrid(data1)  # Populate the grid with the fetched data
@@ -90,3 +116,4 @@ else:
 
 # Save the workbook to the specified path
 wb.save(excel_file_path)
+
