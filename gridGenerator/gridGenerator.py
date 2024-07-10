@@ -5,7 +5,9 @@
 import os
 import sys
 from openpyxl import load_workbook
+from openpyxl.workbook import Workbook
 from openpyxl.styles import PatternFill
+from openpyxl.utils import column_index_from_string
 from datetime import time
 
 # Add the external directory to sys.path
@@ -15,7 +17,8 @@ sys.path.append(external_directory)
 
 # Import functions from custom modules
 from api_calls.workday_api.workday_api import getStudentSchedule
-from utils.helperFunctions import convert_to_time
+from utils.helperFunctions import convert_to_time, copy_worksheet
+
 
 # Get the Excel file path from command-line arguments
 if len(sys.argv) < 2:
@@ -33,12 +36,47 @@ if not os.path.exists(excel_file_path):
 # Load the workbook and access the active sheet
 wb = load_workbook(excel_file_path)
 ws = wb.active
-    
+
+
+# Restores an empty grid so that each time this program runs, the grid will be overwritten
+# Iterates through each cell and fills it with the empty white color
+# No return value or parameters needed
+def clearGrid():
+    min_row = 3
+    min_col = 2
+    max_row = 9
+    max_col = column_index_from_string("GK")
+
+    # Iterate through the specified range of rows and columns
+    for row in range(min_row, max_row + 1):
+        for col in range(min_col, max_col + 1):
+            cell = ws.cell(row=row, column=col)
+            
+            if row % 2 == 0:
+                fillColor = PatternFill(
+                    start_color="FFFFFF", end_color="FFFFFF", fill_type="solid"
+                )
+            elif row == 5 or row == 7:
+                fillColor = PatternFill(
+                    start_color="D3D3D3", end_color="D3D3D3", fill_type="solid"
+                )
+            
+            else:
+                fillColor = PatternFill(
+                    start_color="C0C0C0", end_color="C0C0C0", fill_type="solid"
+                )
+                
+            cell.fill = fillColor
+
 
 def populateGrid(data):
     """
     Iterate through each day to fill in the grid based on the provided data.
     """
+    if not data:
+        return
+    
+    
     for course in data:
         fillInDay(course, "U", 3)  # Sunday
         fillInDay(course, "M", 4)  # Monday
@@ -53,10 +91,8 @@ def fillInDay(course, day, rowNum):
     """
     Iterates through each time slot in the "day" row of the grid and determines whether or not to highlight that slot.
     """
-    
-    default_color = ws.cell(row=rowNum, column=1).fill.start_color
-    
-    max_col = ws.max_column
+
+    max_col = column_index_from_string("GK")
     hour = 6  # Start at 6 AM
     for col_num_outer in range(2, max_col + 1, 12):  # Loop through each hour
         minute = 0
@@ -70,15 +106,10 @@ def fillInDay(course, day, rowNum):
                     start_color="98FF98", end_color="98FF98", fill_type="solid"
                 )  # Light green color
                 cell.fill = fillColor
-            else:
-                cell = ws.cell(row=rowNum, column=col_num_inner)
-                cell.fill = PatternFill(
-                    start_color=default_color, end_color=default_color, fill_type="solid"
-                )
-                
+
             minute += 5
         hour += 1
-        
+
 
 def isAvailable(course, day, currentTime):
     """
@@ -95,25 +126,30 @@ def isAvailable(course, day, currentTime):
 
 
 # Comment out or remove the clearGrid function call
-# clearGrid()
+clearGrid()
 
 # Fetch the student schedule data from Workday
 # data1 = getStudentSchedule(0)
 
 data1 = [
-    {
-        "subject": "Physics",
-        "start": "12:00:00 PM",
-        "end": "1:00:00 PM",
-        "meetingDays": "TR",
-    }
+    # {
+    #     "subject": "Physics",
+    #     "start": "6:00:00 AM",
+    #     "end": "10:00:00 AM",
+    #     "meetingDays": "TR",
+    # },
+    # {
+    #     "subject": "Math",
+    #     "start": "6:00:00 AM",
+    #     "end": "10:00:00 AM",
+    #     "meetingDays": "MWF",
+    # }
 ]
 
 if data1:
     populateGrid(data1)  # Populate the grid with the fetched data
 else:
-    print("Error fetching data from Workday")
+    print("No data returned from Workday")
 
 # Save the workbook to the specified path
 wb.save(excel_file_path)
-

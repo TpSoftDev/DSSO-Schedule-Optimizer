@@ -124,7 +124,6 @@ avail_ranges = []
 # Convert to 12-hour format and print the results
 for day, ranges in condensed_available_times_per_day.items():
     formatted_ranges = format_ranges_12_hour(ranges)
-    print(f"{day}: {formatted_ranges}")
     avail_ranges.append(formatted_ranges)
 
 def update_availability(student_id, avail_ranges):
@@ -140,6 +139,4 @@ def update_availability(student_id, avail_ranges):
         })
 
     updateAvailability(updated_data)
-    print("UPDATED")
-    print(f"Student ID: {student_id}")
-    print(updated_data)
+
